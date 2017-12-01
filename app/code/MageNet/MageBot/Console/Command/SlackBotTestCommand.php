@@ -35,19 +35,21 @@ class SlackBotTestCommand extends Command
     {
         $this->setName('magenet:magebot:slack-test')
              ->setDescription('Test slack bot')
-             ->addArgument('message', InputArgument::REQUIRED, 'send test message');
+             ->addArgument('message', InputArgument::REQUIRED, 'message to send')
+             ->addArgument('channel', InputArgument::OPTIONAL, 'channel', null);
     }
 
     /** {@inheritdoc} */
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $message = $input->getArgument('message');
+        $channel = $input->getArgument('channel');
 
         try {
-            $result = $this->bot->sendMessage($message);
+            $result = $this->bot->sendMessage($message, $channel);
             $output->writeln('Message has been sent');
         } catch (\Exception $e) {
-            $output->writeln(sprintf('<error>%s</error>', $e->getMessage()));
+            $output->writeln(sprintf('<error>Error: %s</error>', $e->getMessage()));
         }
     }
 }

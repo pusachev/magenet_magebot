@@ -10,6 +10,8 @@ use BotMan\BotMan\BotMan;
 use BotMan\BotMan\Drivers\DriverManager;
 use BotMan\Drivers\Slack\SlackDriver;
 use BotMan\BotMan\BotManFactory;
+use MageNet\MageBot\Exception\SlackException;
+use MageNet\MageBot\Processor\SlackResponseProcessorInterface;
 use MageNet\MageBot\Provider\SlackConfigProviderInterface;
 
 class SlackBot implements SlackBotInterface, BotInterface
@@ -17,13 +19,18 @@ class SlackBot implements SlackBotInterface, BotInterface
     /** @var BotMan */
     protected $slackBot;
 
-    /** @var SlackConfigProviderInterface */
-    protected $slackConfigProvider;
+    /** @var SlackResponseProcessorInterface */
+    protected $processor;
 
-    public function __construct(SlackConfigProviderInterface $slackConfigProvider)
-    {
-        DriverManager::loadDriver(SlackDriver::class);
-        $this->slackConfigProvider = $slackConfigProvider;
+    /** @var SlackConfigProviderInterface */
+    protected $configProvider;
+
+    public function __construct(
+        SlackConfigProviderInterface $slackConfigProvider,
+        SlackResponseProcessorInterface $slackResponseProcessor
+    ) {
+        $this->configProvider = $slackConfigProvider;
+        $this->processor      = $slackResponseProcessor;
 
         $this->initialize();
     }
@@ -34,6 +41,7 @@ class SlackBot implements SlackBotInterface, BotInterface
     public function initialize()
     {
         if (null === $this->slackBot) {
+            DriverManager::loadDriver(SlackDriver::class);
             $this->slackBot = BotManFactory::create($this->getDriverConfig());
         }
 
@@ -45,7 +53,13 @@ class SlackBot implements SlackBotInterface, BotInterface
     {
         $channel = (null === $channel) ? 'general' : $channel;
 
-        return $this->slackBot->say($message, $channel, SlackDriver::class);
+        $response = $this->slackBot->say($message, $channel, SlackDriver::class);
+
+        if (!$this->processor->process($response)) {
+            throw new SlackException($this->processor->getLastError());
+        }
+
+        return $response;
     }
 
     /**
@@ -55,7 +69,7 @@ class SlackBot implements SlackBotInterface, BotInterface
     {
         return [
             'slack' => [
-                'token' => $this->slackConfigProvider->getToken()
+                'token' => $this->configProvider->getToken()
             ]
         ];
     }
