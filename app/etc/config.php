@@ -3,6 +3,7 @@ return array (
   'modules' => 
   array (
     'MageNet_MageBot' => 1,
+    'MageNet_SimpleOrder' => 1,
     'Magento_Store' => 1,
     'Magento_AdvancedPricingImportExport' => 1,
     'Magento_Directory' => 1,

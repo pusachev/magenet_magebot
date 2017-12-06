@@ -10,8 +10,9 @@ use BotMan\BotMan\BotMan;
 use BotMan\BotMan\Drivers\DriverManager;
 use BotMan\Drivers\Slack\SlackDriver;
 use BotMan\BotMan\BotManFactory;
+
 use MageNet\MageBot\Exception\SlackException;
-use MageNet\MageBot\Processor\SlackResponseProcessorInterface;
+use MageNet\MageBot\Handler\BotErrorHandlerInterface;
 use MageNet\MageBot\Provider\SlackConfigProviderInterface;
 
 class SlackBot implements SlackBotInterface, BotInterface
@@ -19,18 +20,18 @@ class SlackBot implements SlackBotInterface, BotInterface
     /** @var BotMan */
     protected $slackBot;
 
-    /** @var SlackResponseProcessorInterface */
-    protected $processor;
+    /** @var BotErrorHandlerInterface */
+    protected $handler;
 
     /** @var SlackConfigProviderInterface */
     protected $configProvider;
 
     public function __construct(
         SlackConfigProviderInterface $slackConfigProvider,
-        SlackResponseProcessorInterface $slackResponseProcessor
+        BotErrorHandlerInterface $botErrorHandler
     ) {
         $this->configProvider = $slackConfigProvider;
-        $this->processor      = $slackResponseProcessor;
+        $this->handler        = $botErrorHandler;
 
         $this->initialize();
     }
@@ -55,8 +56,8 @@ class SlackBot implements SlackBotInterface, BotInterface
 
         $response = $this->slackBot->say($message, $channel, SlackDriver::class);
 
-        if (!$this->processor->process($response)) {
-            throw new SlackException($this->processor->getLastError());
+        if (!$this->handler->handle($response)) {
+            throw new SlackException($this->handler->getLastError());
         }
 
         return $response;

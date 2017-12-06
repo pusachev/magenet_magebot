@@ -31,7 +31,8 @@
         "magento/module-wishlist-sample-data": "100.2.*",
         "magento/module-swatches-sample-data": "100.2.*",
         "magento/sample-data-media": "100.2.*",
-        "magento/module-offline-shipping-sample-data": "100.2.*"
+        "magento/module-offline-shipping-sample-data": "100.2.*",
+        "guzzlehttp/guzzle": "^6.3"
     },
     "require-dev": {
         "phpunit/phpunit": "~6.2.0",

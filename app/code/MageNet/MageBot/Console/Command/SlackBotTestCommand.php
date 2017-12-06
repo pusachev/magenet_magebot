@@ -13,20 +13,26 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 use MageNet\MageBot\Bot\SlackBotInterface;
+use MageNet\MageBot\Provider\Transport\SlackTransportInterface;
 
 class SlackBotTestCommand extends Command
 {
     /** @var  */
     protected $bot;
 
+    /** @var SlackTransportInterface */
+    protected $transport;
+
     /**
      * SlackBotTestCommand constructor.
-     * @param SlackBotInterface $slackBot
-     * @param null|string       $name
+     * @param SlackBotInterface         $slackBot
+     * @param SlackTransportInterface   $slackTransport
+     * @param null|string               $name
      */
-    public function __construct(SlackBotInterface $slackBot, $name = null)
+    public function __construct(SlackBotInterface $slackBot, SlackTransportInterface $slackTransport, $name = null)
     {
         $this->bot = $slackBot;
+        $this->transport = $slackTransport;
         parent::__construct($name);
     }
 
@@ -35,21 +41,24 @@ class SlackBotTestCommand extends Command
     {
         $this->setName('magenet:magebot:slack-test')
              ->setDescription('Test slack bot')
-             ->addArgument('message', InputArgument::REQUIRED, 'message to send')
+             ->addArgument('message', InputArgument::OPTIONAL, 'message to send')
              ->addArgument('channel', InputArgument::OPTIONAL, 'channel', null);
     }
 
     /** {@inheritdoc} */
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $message = $input->getArgument('message');
-        $channel = $input->getArgument('channel');
 
-        try {
-            $result = $this->bot->sendMessage($message, $channel);
-            $output->writeln('Message has been sent');
-        } catch (\Exception $e) {
-            $output->writeln(sprintf('<error>Error: %s</error>', $e->getMessage()));
-        }
+          $output->writeln($this->transport->init());
+
+//        $message = $input->getArgument('message');
+//        $channel = $input->getArgument('channel');
+//
+//        try {
+//            $result = $this->bot->sendMessage($message, $channel);
+//            $output->writeln('Message has been sent');
+//        } catch (\Exception $e) {
+//            $output->writeln(sprintf('<error>Error: %s</error>', $e->getMessage()));
+//        }
     }
 }

@@ -8,7 +8,9 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <preference for="MageNet\MageBot\Bot\SlackBotInterface" type="MageNet\MageBot\Bot\SlackBot" />
     <preference for="MageNet\MageBot\Provider\SlackConfigProviderInterface" type="MageNet\MageBot\Provider\SlackConfigProvider" />
-    <preference for="MageNet\MageBot\Processor\SlackResponseProcessorInterface" type="MageNet\MageBot\Processor\SlackResponseProcessor" />
+    <preference for="MageNet\MageBot\Factory\RestClientFactoryInterface" type="MageNet\MageBot\Factory\EventDispatchableRestClientFactory" />
+    <preference for="MageNet\MageBot\Provider\Transport\SlackTransportInterface" type="MageNet\MageBot\Provider\Transport\SlackTransport" />
+    <preference for="MageNet\MageBot\Handler\BotErrorHandlerInterface" type="MageNet\MageBot\Handler\BotErrorHandler" />
     <type name="Magento\Framework\Console\CommandList">
         <arguments>
             <argument name="commands" xsi:type="array">

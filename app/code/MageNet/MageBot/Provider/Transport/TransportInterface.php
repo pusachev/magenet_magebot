@@ -4,9 +4,9 @@
  * @copyright Copyright (c) 2017, Pavel Usachev
  */
 
-namespace MageNet\MageBot\Processor;
+namespace MageNet\MageBot\Provider\Transport;
 
-interface SlackResponseProcessorInterface extends BotResponseProcessorInterface
+interface TransportInterface
 {
-
+    public function init();
 }

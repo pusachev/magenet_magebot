@@ -13,7 +13,8 @@
     "php": "7.0.2|7.0.4|~7.0.6",
     "magento/framework": ">=100.0.0",
     "botman/botman": "^2.1",
-    "botman/driver-slack": "^1.1"
+    "botman/driver-slack": "^1.1",
+    "guzzlehttp/guzzle": "~6.0"
   },
   "type": "magento2-module",
   "version": "100.0.0",

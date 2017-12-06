@@ -4,31 +4,30 @@
  * @copyright Copyright (c) 2017, Pavel Usachev
  */
 
-namespace MageNet\MageBot\Processor;
+namespace MageNet\MageBot\Handler;
 
 use Symfony\Component\HttpFoundation\Response;
 
 use Magento\Framework\Serialize\Serializer\Json as JsonHelper;
 
-class SlackResponseProcessor implements SlackResponseProcessorInterface
+class BotErrorHandler implements BotErrorHandlerInterface
 {
-    const STATUS_KEY = 'ok';
-
-    const ERROR_KEY = 'error';
-
     /** @var string[] */
     protected $errors = [];
 
     /** @var JsonHelper */
     protected $jsonHelper;
 
+    /**
+     * @param JsonHelper $jsonHelper
+     */
     public function __construct(JsonHelper $jsonHelper)
     {
         $this->jsonHelper = $jsonHelper;
     }
 
     /** {@inheritdoc} */
-    public function process(Response $response)
+    public function handle(Response $response)
     {
         $data = $this->jsonHelper->unserialize($response->getContent());
 
@@ -41,14 +40,20 @@ class SlackResponseProcessor implements SlackResponseProcessorInterface
     }
 
     /** {@inheritdoc} */
+    public function getLastError()
+    {
+        return array_pop($this->errors);
+    }
+
+    /** {@inheritdoc} */
     public function getErrors()
     {
         return $this->errors;
     }
 
     /** {@inheritdoc} */
-    public function getLastError()
+    public function hasErrors()
     {
-        return array_pop($this->errors);
+        return !empty($this->errors);
     }
 }
