@@ -49,7 +49,7 @@ class SlackBotTestCommand extends Command
     public function execute(InputInterface $input, OutputInterface $output)
     {
 
-          $output->writeln($this->transport->init());
+          $output->writeln($this->transport->sendMessage('#general', 'test'));
 
 //        $message = $input->getArgument('message');
 //        $channel = $input->getArgument('channel');

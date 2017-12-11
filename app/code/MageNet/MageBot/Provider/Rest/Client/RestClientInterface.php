@@ -6,10 +6,23 @@
 
 namespace MageNet\MageBot\Provider\Rest\Client;
 
+use GuzzleHttp\ClientInterface;
 use Psr\Http\Message\ResponseInterface;
 
 interface RestClientInterface
 {
+    /**
+     * @return string[]
+     */
+    public function getHeaders();
+
+    /**
+     * @param string $name
+     * @param string $value
+     * @return ClientInterface
+     */
+    public function addHeader($name, $value);
+
     /**
      * @param string    $uri
      * @param mixed[]   $options

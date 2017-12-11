@@ -4,9 +4,8 @@
  * @copyright Copyright (c) 2017, Pavel Usachev
  */
 
-namespace MageNet\MageBot\Provider\Transport;
+namespace MageNet\MageBot\Exception\Rest;
 
-interface TransportInterface
+class RestException extends \Exception
 {
-    public function init();
 }

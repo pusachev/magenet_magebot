@@ -88,11 +88,35 @@ class Guzzle implements RestClientInterface
         return $this->client;
     }
 
+    /**
+     * @param string   $method
+     * @param string   $uri
+     * @param string[] $options
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
     protected function createRequest(
         $method,
         $uri,
         array $options
     ) {
         $this->lastResponse = $this->getClient()->request($method, $uri, $options);
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getHeaders()
+    {
+        // TODO: Implement getHeaders() method.
+    }
+
+    /**
+     * @param string $name
+     * @param string $value
+     * @return ClientInterface
+     */
+    public function addHeader($name, $value)
+    {
+        // TODO: Implement addHeader() method.
     }
 }
